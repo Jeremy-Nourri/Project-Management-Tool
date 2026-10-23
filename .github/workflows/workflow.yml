@@ -1,0 +1,33 @@
+name:  CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Back
+    steps:
+      - name: recuperer le code
+        uses: actions/checkout@v4
+      - name: Installer le JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: temurin
+          cache: maven
+
+      - name: Build, tests et couverture
+        run: mvn -B verify
+
+      - name: Publier le rapport de couverture backend
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-couverture-backend
+          path: Back/target/site/jacoco/
+          if-no-files-found: warn
