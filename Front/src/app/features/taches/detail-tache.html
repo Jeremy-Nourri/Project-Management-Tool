@@ -1,0 +1,86 @@
+@if (tache(); as t) {
+  <a class="retour" [routerLink]="['/projets', t.projetId]">Retour au projet</a>
+
+  <div class="barre-titre">
+    <h1>{{ t.nom }}</h1>
+    <button type="button" (click)="basculerEdition()">
+      {{ modeEdition() ? 'Annuler' : 'Modifier' }}
+    </button>
+  </div>
+
+  @if (erreur()) {
+    <p class="erreur">{{ erreur() }}</p>
+  }
+
+  @if (modeEdition()) {
+    <form class="carte" [formGroup]="formulaire" (ngSubmit)="enregistrer()">
+      <label>
+        Nom
+        <input type="text" formControlName="nom" />
+      </label>
+      <label>
+        Description
+        <textarea formControlName="description" rows="3"></textarea>
+      </label>
+      <div class="ligne">
+        <label>
+          Echeance
+          <input type="date" formControlName="dateEcheance" />
+        </label>
+        <label>
+          Date de fin
+          <input type="date" formControlName="dateFin" />
+        </label>
+        <label>
+          Priorite
+          <select formControlName="priorite">
+            @for (priorite of priorites; track priorite) {
+              <option [value]="priorite">{{ libellesPriorite[priorite] }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Statut
+          <select formControlName="statut">
+            @for (statut of statuts; track statut) {
+              <option [value]="statut">{{ libellesStatut[statut] }}</option>
+            }
+          </select>
+        </label>
+      </div>
+      <button type="submit">Enregistrer</button>
+    </form>
+  } @else {
+    <dl class="carte fiche">
+      <dt>Description</dt>
+      <dd>{{ t.description || 'Aucune' }}</dd>
+      <dt>Statut</dt>
+      <dd>{{ libellesStatut[t.statut] }}</dd>
+      <dt>Priorite</dt>
+      <dd>{{ libellesPriorite[t.priorite] }}</dd>
+      <dt>Echeance</dt>
+      <dd>{{ t.dateEcheance ? (t.dateEcheance | date: 'dd/MM/yyyy') : 'Non definie' }}</dd>
+      <dt>Date de fin</dt>
+      <dd>{{ t.dateFin ? (t.dateFin | date: 'dd/MM/yyyy') : 'Non terminee' }}</dd>
+      <dt>Assignee a</dt>
+      <dd>{{ t.assigne?.nom || 'Personne' }}</dd>
+      <dt>Creee par</dt>
+      <dd>{{ t.createur.nom }} le {{ t.dateCreation | date: 'dd/MM/yyyy' }}</dd>
+    </dl>
+  }
+
+  <section>
+    <h2>Historique des modifications</h2>
+
+    @for (ligne of historique(); track ligne.id) {
+      <p class="ligne-historique">
+        <strong>{{ ligne.auteur.nom }}</strong>
+        a modifie <em>{{ ligne.nomChamp }}</em>
+        : {{ ligne.ancienneValeur || 'vide' }} &rarr; {{ ligne.nouvelleValeur || 'vide' }}
+        <small>{{ ligne.dateModif | date: 'dd/MM/yyyy HH:mm' }}</small>
+      </p>
+    } @empty {
+      <p class="vide">Aucune modification enregistree.</p>
+    }
+  </section>
+}

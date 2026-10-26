@@ -1,0 +1,38 @@
+.entete {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background: #1f2430;
+  color: #fff;
+
+  .logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #a78bfa;
+    text-decoration: none;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  a,
+  .lien {
+    color: #e5e7eb;
+    text-decoration: none;
+  }
+
+  .utilisateur {
+    color: #9ca3af;
+    font-size: 0.875rem;
+  }
+}
+
+.contenu {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}

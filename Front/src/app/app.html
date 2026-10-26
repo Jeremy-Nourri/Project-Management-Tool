@@ -1,0 +1,15 @@
+<header class="entete">
+  <a class="logo" routerLink="/projets">PMT</a>
+
+  @if (auth.estConnecte()) {
+    <nav>
+      <a routerLink="/projets">Mes projets</a>
+      <span class="utilisateur">{{ auth.utilisateur()?.nom }}</span>
+      <button type="button" class="lien" (click)="deconnecter()">Déconnexion</button>
+    </nav>
+  }
+</header>
+
+<main class="contenu">
+  <router-outlet />
+</main>

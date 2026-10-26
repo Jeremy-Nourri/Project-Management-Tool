@@ -54,6 +54,22 @@ services:
     networks:
       - pmt-network
 
+  # ---------------------------------------------------------------------------
+  # Frontend Angular servi par Nginx, qui relaie /api vers le backend.
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./Front
+    image: ${DOCKERHUB_USER:-pmt}/pmt-frontend:${TAG:-latest}
+    container_name: pmt-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT:-4200}:80"
+    networks:
+      - pmt-network
+
 networks:
   pmt-network:
     driver: bridge
