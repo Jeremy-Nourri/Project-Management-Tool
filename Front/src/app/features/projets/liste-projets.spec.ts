@@ -96,6 +96,6 @@ describe('ListeProjets', () => {
     composant().creer();
     http.expectOne(URL).flush({}, { status: 500, statusText: 'Error' });
 
-    expect(composant().erreur()).toContain('echoue');
+    expect(composant().erreur()).toContain('projet');
   });
 });

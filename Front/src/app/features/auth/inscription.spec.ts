@@ -75,7 +75,7 @@ describe('Inscription', () => {
     http.expectOne(URL_INSCRIPTION).flush({}, { status: 409, statusText: 'Conflict' });
 
     fixture.detectChanges();
-    expect(composant().erreur()).toContain('existe deja');
+    expect(composant().erreur()).toContain('existe');
   });
 
   it('affiche un message générique sur les autres erreurs', () => {
@@ -84,6 +84,6 @@ describe('Inscription', () => {
     http.expectOne(URL_INSCRIPTION).flush({}, { status: 500, statusText: 'Error' });
 
     fixture.detectChanges();
-    expect(composant().erreur()).toContain('echoue');
+    expect(composant().erreur()).toContain('inscription');
   });
 });

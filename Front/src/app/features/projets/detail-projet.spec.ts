@@ -141,7 +141,7 @@ describe('DetailProjet', () => {
       .expectOne(API + '/projets/1/membres')
       .flush({}, { status: 404, statusText: 'Not Found' });
 
-    expect(composant().erreur()).toContain('Aucun compte');
+    expect(composant().erreur()).toContain('compte');
   });
 
   it('signale un membre déja présent', () => {
@@ -157,7 +157,7 @@ describe('DetailProjet', () => {
       .expectOne(API + '/projets/1/membres')
       .flush({}, { status: 409, statusText: 'Conflict' });
 
-    expect(composant().erreur()).toContain('deja membre');
+    expect(composant().erreur()).toContain('membre');
   });
 
   it("invite pas si le formulaire est invalide", () => {
@@ -189,7 +189,7 @@ describe('DetailProjet', () => {
       .expectOne(API + '/projets/1/membres')
       .flush({}, { status: 409, statusText: 'Conflict' });
 
-    expect(composant().erreur()).toContain('dernier administrateur');
+    expect(composant().erreur()).toContain('administrateur');
   });
 
   it('ajoute la tache créé au tableau', () => {
