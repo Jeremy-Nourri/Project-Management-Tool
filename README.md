@@ -32,7 +32,7 @@ Prérequis : Docker et Docker Compose.
 ```bash
 git clone https://github.com/Jeremy-Nourri/Project-Management-Tool.git
 cd "Project Management"
-cp .env.example .env        # adapter si besoin
+cp .env.example .env
 docker compose up --build
 ```
 
@@ -98,8 +98,8 @@ cd Front && npm install && npm start
 ## Tests
 
 ```bash
-cd Back  && mvn verify        # 39 tests  (JUnit, Mockito, Testcontainers)
-cd Front && npm run test:ci   # 58 tests  (Vitest)
+cd Back  && mvn verify
+cd Front && npm run test:ci
 ```
 
 Côté backend, Docker doit être démarré : les tests d'intégration lancent un
@@ -136,9 +136,8 @@ Documentation interactive : `/swagger-ui.html` — spécification OpenAPI : `/v3
 Hors `/api/auth`, les routes attendent l'en-tête `Authorization` portant
 l'identifiant retourné par `/api/auth/connexion`.
 
-> L'énoncé dispense de la sécurisation du backend : cette identification n'est
-> pas un mécanisme d'authentification sécurisé. Son extraction étant isolée
-> dans les contrôleurs, un passage à JWT n'impacterait pas la couche service.
+L'énoncé dispense de la sécurisation du backend : cette identification n'est
+pas un mécanisme d'authentification sécurisé.
 
 ### Rôles et permissions
 
