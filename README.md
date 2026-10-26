@@ -10,8 +10,8 @@ et historique des modifications.
 |---|---|
 | Backend | Java 21, Spring Boot 3.5, Spring Data JPA |
 | Base de données | MySQL 8 |
-| Frontend | Angular |
-| Tests | JUnit 5, Mockito, Testcontainers, JaCoCo |
+| Frontend | Angular 22, TypeScript |
+| Tests | JUnit 5, Mockito, Testcontainers, JaCoCo, Vitest |
 | CI/CD | GitHub Actions, Docker Hub |
 
 ## Structure du dépôt
@@ -38,6 +38,7 @@ docker compose up --build
 
 | Service | URL |
 |---|---|
+| Application | http://localhost:4200 |
 | API (Swagger) | http://localhost:8080/swagger-ui.html |
 | MailHog (notifications) | http://localhost:8025 |
 | MySQL | localhost:3307 |
@@ -53,6 +54,7 @@ Les images sont publiées à chaque merge sur `main` :
 
 ```bash
 docker pull <DOCKERHUB_USER>/pmt-backend:latest
+docker pull <DOCKERHUB_USER>/pmt-frontend:latest
 ```
 
 Pour déployer sans recompiler, renseigner `DOCKERHUB_USER` dans `.env`,
@@ -71,7 +73,7 @@ Voir `.env.example`.
 | Variable | Défaut | Rôle |
 |---|---|---|
 | `DB_NAME` / `DB_ROOT_PASSWORD` / `DB_PORT` | `pmt` / `root` / `3307` | base de données |
-| `BACKEND_PORT` | `8080` | port de l'API |
+| `BACKEND_PORT` / `FRONTEND_PORT` | `8080` / `4200` | ports publiés |
 | `CORS_ORIGINS` | `http://localhost:4200` | origines autorisées |
 | `DOCKERHUB_USER` / `TAG` | — / `latest` | image à déployer |
 
@@ -88,20 +90,28 @@ mysql -u root -p pmt -e "source Database/schema.sql"
 
 # backend
 cd Back && mvn spring-boot:run
+
+# frontend
+cd Front && npm install && npm start
 ```
 
 ## Tests
 
 ```bash
-cd Back && mvn verify
+cd Back  && mvn verify        # 39 tests  (JUnit, Mockito, Testcontainers)
+cd Front && npm run test:ci   # 58 tests  (Vitest)
 ```
 
-Docker doit être démarré : les tests d'intégration lancent un conteneur MySQL
-(Testcontainers) qui exécute `Database/schema.sql`, validant ainsi le mapping
-JPA contre le schéma livré.
+Côté backend, Docker doit être démarré : les tests d'intégration lancent un
+conteneur MySQL (Testcontainers) qui exécute `Database/schema.sql`, validant
+ainsi le mapping JPA contre le schéma livré.
 
-Rapport de couverture : `Back/target/site/jacoco/index.html`.
-Le build échoue sous **60 %** d'instructions ou de branches.
+| Rapport | Emplacement | Couverture |
+|---|---|---|
+| Backend (JaCoCo) | `Back/target/site/jacoco/index.html` | 75,7 % instructions / 69,0 % branches |
+| Frontend (Vitest) | `Front/coverage/index.html` | 93,4 % instructions / 89,9 % branches |
+
+Les deux builds échouent sous **60 %** d'instructions ou de branches.
 
 ## Pipeline CI/CD
 
@@ -110,10 +120,12 @@ Déclenchement : push et pull request sur `main`.
 | Job | Quand | Rôle |
 |---|---|---|
 | `backend` | push et PR | compile, teste, vérifie la couverture, publie le rapport |
-| `deploiement-backend` | push sur `main` uniquement | construit l'image et la pousse sur Docker Hub |
+| `frontend` | push et PR | teste, vérifie la couverture, build de production |
+| `deploiement` | push sur `main` uniquement | construit les deux images et les pousse sur Docker Hub |
 
-Le déploiement dépend du succès des tests : aucune image n'est publiée si un
-test échoue ou si la couverture passe sous le seuil.
+Le déploiement dépend du succès des **deux** jobs de test : aucune image n'est
+publiée si un test échoue ou si la couverture passe sous le seuil. Les deux
+images sont construites en parallèle via une matrice.
 
 Secrets requis : `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
 

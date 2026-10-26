@@ -1,0 +1,31 @@
+<section class="carte-formulaire">
+  <h1>Connexion</h1>
+
+  <form [formGroup]="formulaire" (ngSubmit)="soumettre()">
+    <label>
+      Email
+      <input type="email" formControlName="email" autocomplete="email" />
+    </label>
+    @if (formulaire.controls.email.touched && formulaire.controls.email.invalid) {
+      <p class="erreur-champ">Email invalide.</p>
+    }
+
+    <label>
+      Mot de passe
+      <input type="password" formControlName="motDePasse" autocomplete="current-password" />
+    </label>
+    @if (formulaire.controls.motDePasse.touched && formulaire.controls.motDePasse.invalid) {
+      <p class="erreur-champ">Mot de passe obligatoire.</p>
+    }
+
+    @if (erreur()) {
+      <p class="erreur">{{ erreur() }}</p>
+    }
+
+    <button type="submit" [disabled]="enCours()">
+      {{ enCours() ? 'Connexion...' : 'Se connecter' }}
+    </button>
+  </form>
+
+  <p>Pas encore de compte ? <a routerLink="/inscription">Créer un compte</a></p>
+</section>

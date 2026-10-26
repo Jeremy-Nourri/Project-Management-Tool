@@ -1,0 +1,44 @@
+<div class="barre-titre">
+  <h1>Mes projets</h1>
+  <button type="button" (click)="basculerFormulaire()">
+    {{ formulaireVisible() ? 'Annuler' : 'Nouveau projet' }}
+  </button>
+</div>
+
+@if (erreur()) {
+  <p class="erreur">{{ erreur() }}</p>
+}
+
+@if (formulaireVisible()) {
+  <form class="carte" [formGroup]="formulaire" (ngSubmit)="creer()">
+    <label>
+      Nom
+      <input type="text" formControlName="nom" />
+    </label>
+    <label>
+      Description
+      <textarea formControlName="description" rows="2"></textarea>
+    </label>
+    <label>
+      Date de debut
+      <input type="date" formControlName="dateDebut" />
+    </label>
+    <button type="submit">Creer le projet</button>
+  </form>
+}
+
+@if (projets().length === 0) {
+  <p class="vide">Aucun projet pour le moment.</p>
+} @else {
+  <ul class="grille">
+    @for (projet of projets(); track projet.id) {
+      <li class="carte">
+        <a [routerLink]="['/projets', projet.id]">
+          <h2>{{ projet.nom }}</h2>
+        </a>
+        <p>{{ projet.description || 'Pas de description' }}</p>
+        <small>Debut : {{ projet.dateDebut | date: 'dd/MM/yyyy' }}</small>
+      </li>
+    }
+  </ul>
+}

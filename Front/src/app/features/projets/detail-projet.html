@@ -1,0 +1,123 @@
+@if (projet(); as p) {
+  <div class="barre-titre">
+    <div>
+      <h1>{{ p.nom }}</h1>
+      <p>{{ p.description || 'Pas de description' }}</p>
+      <small>Debut : {{ p.dateDebut | date: 'dd/MM/yyyy' }}</small>
+    </div>
+    @if (monRole(); as role) {
+      <span class="badge">{{ libellesRole[role] }}</span>
+    }
+  </div>
+}
+
+@if (erreur()) {
+  <p class="erreur">{{ erreur() }}</p>
+}
+
+<section>
+  <h2>Membres</h2>
+
+  <ul class="liste-membres">
+    @for (membre of membres(); track membre.utilisateur.id) {
+      <li>
+        <span>{{ membre.utilisateur.nom }} ({{ membre.utilisateur.email }})</span>
+        @if (estAdmin()) {
+          <select
+            [value]="membre.role"
+            (change)="changerRole(membre, $any($event.target).value)"
+          >
+            @for (role of roles; track role) {
+              <option [value]="role">{{ libellesRole[role] }}</option>
+            }
+          </select>
+        } @else {
+          <span class="badge">{{ libellesRole[membre.role] }}</span>
+        }
+      </li>
+    }
+  </ul>
+
+  @if (estAdmin()) {
+    <form class="ligne" [formGroup]="formulaireMembre" (ngSubmit)="inviter()">
+      <input type="email" formControlName="email" placeholder="email@exemple.fr" />
+      <select formControlName="role">
+        @for (role of roles; track role) {
+          <option [value]="role">{{ libellesRole[role] }}</option>
+        }
+      </select>
+      <button type="submit">Inviter</button>
+    </form>
+  }
+</section>
+
+<section>
+  <h2>Tableau de bord</h2>
+
+  <div class="tableau">
+    @for (statut of statuts; track statut) {
+      <div class="colonne">
+        <h3>{{ libellesStatut[statut] }} ({{ tachesParStatut(statut).length }})</h3>
+
+        @for (tache of tachesParStatut(statut); track tache.id) {
+          <article class="carte-tache">
+            <a [routerLink]="['/taches', tache.id]">{{ tache.nom }}</a>
+            <div class="meta">
+              <span class="priorite" [class]="tache.priorite.toLowerCase()">
+                {{ libellesPriorite[tache.priorite] }}
+              </span>
+              @if (tache.dateEcheance) {
+                <small>{{ tache.dateEcheance | date: 'dd/MM' }}</small>
+              }
+            </div>
+            <small>{{ tache.assigne?.nom || 'Non assignée' }}</small>
+          </article>
+        } @empty {
+          <p class="vide">Aucune tache</p>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+@if (peutModifier()) {
+  <section>
+    <h2>Nouvelle tache</h2>
+    <form class="carte" [formGroup]="formulaireTache" (ngSubmit)="creerTache()">
+      <label>
+        Nom
+        <input type="text" formControlName="nom" />
+      </label>
+      <label>
+        Description
+        <textarea formControlName="description" rows="2"></textarea>
+      </label>
+      <div class="ligne">
+        <label>
+          Échéance
+          <input type="date" formControlName="dateEcheance" />
+        </label>
+        <label>
+          Priorité
+          <select formControlName="priorite">
+            @for (priorite of priorites; track priorite) {
+              <option [value]="priorite">{{ libellesPriorite[priorite] }}</option>
+            }
+          </select>
+        </label>
+        <label>
+          Assigner à
+          <select formControlName="assigneEmail">
+            <option value="">Personne</option>
+            @for (membre of membres(); track membre.utilisateur.id) {
+              <option [value]="membre.utilisateur.email">
+                {{ membre.utilisateur.nom }}
+              </option>
+            }
+          </select>
+        </label>
+      </div>
+      <button type="submit">Créer la tache</button>
+    </form>
+  </section>
+}
