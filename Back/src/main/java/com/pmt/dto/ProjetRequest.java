@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 /**
- * Donnees de creation ou de mise a jour d'un projet.
+ * Données de création ou de mise a jour d'un projet.
  *
  * @param nom nom du projet, 2 à 100 caractères
  * @param description description libre, facultative

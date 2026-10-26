@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 /**
  * Identifiants de connexion.
- * @param email      adresse e-mail du compte
+ * @param email adresse e-mail du compte
  * @param motDePasse mot de passe en clair
  */
 public record ConnexionRequest(

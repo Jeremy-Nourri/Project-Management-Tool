@@ -1,0 +1,9 @@
+# Fichiers inutiles au build de l'image : les exclure accelere l'envoi
+# du contexte au demon Docker et evite d'embarquer des artefacts locaux.
+target/
+.idea/
+*.iml
+.mvn/
+mvnw
+mvnw.cmd
+*.log

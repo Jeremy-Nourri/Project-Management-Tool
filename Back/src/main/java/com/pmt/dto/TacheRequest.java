@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 /**
- * Donnees de creation ou de mise a jour d'une tache.
+ * Donnees de création ou de mise à jour d'une tache.
  * Les champs facultatifs laisses a null ne sont pas modifiés lors d'une mise à jour.
  *
  * @param nom intitule de la tache
@@ -17,7 +17,7 @@ import java.time.LocalDate;
  * @param dateFin date de realisation effective
  * @param priorite niveau de priorité
  * @param statut avancement de la tâche
- * @param assigneEmail email du membre a qui la tache est confiée
+ * @param assigneEmail email du membre à qui la tâche est confiée
  */
 public record TacheRequest(
 
