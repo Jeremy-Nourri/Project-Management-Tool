@@ -11,8 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Traduit les exceptions metier en reponses HTTP coherentes,
- * pour toute l'application.
+ * Traduit les exceptions métier en réponses HTTP
  */
 @RestControllerAdvice
 public class GestionnaireExceptions {

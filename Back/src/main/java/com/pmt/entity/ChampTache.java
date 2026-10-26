@@ -1,9 +1,5 @@
 package com.pmt.entity;
 
-/**
- * Noms des champs de tache traces dans historique_tache.
- * Centralises ici pour eviter les fautes de frappe dans les services.
- */
 public final class ChampTache {
 
     public static final String NOM = "nom";
